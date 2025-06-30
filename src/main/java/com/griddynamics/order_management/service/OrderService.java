@@ -7,6 +7,8 @@ import com.griddynamics.order_management.exception.InsufficientStockException;
 import com.griddynamics.order_management.exception.OrderNotFoundException;
 import com.griddynamics.order_management.exception.ProductNotFoundException;
 import com.griddynamics.order_management.model.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -67,4 +69,12 @@ public interface OrderService {
      * @throws CustomerNotFoundException if the customer does not exist
      */
     List<Order> getOrdersByCustomerId(Long customerId) throws CustomerNotFoundException;
+
+    /**
+     * Retrieves a paginated list of orders.
+     *
+     * @param pageable the pagination information
+     * @return a page of {@link Order} entities
+     */
+    Page<Order> getAllOrders(Pageable pageable);
 }

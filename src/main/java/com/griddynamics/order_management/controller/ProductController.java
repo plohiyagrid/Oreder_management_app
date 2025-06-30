@@ -7,6 +7,8 @@ import com.griddynamics.order_management.model.Product;
 import com.griddynamics.order_management.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,18 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a paginated list of products available in the system.
+     *
+     * @param pageable the pagination information (page, size, sort)
+     * @return page of {@link Product} entities and HTTP 200 (OK)
+     */
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Product>> getAllProductsPaged(Pageable pageable) {
+        Page<Product> products = productService.getAllProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

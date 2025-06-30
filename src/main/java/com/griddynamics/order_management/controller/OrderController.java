@@ -10,6 +10,8 @@ import com.griddynamics.order_management.model.Order;
 import com.griddynamics.order_management.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -103,5 +105,17 @@ public class OrderController {
             throws CustomerNotFoundException {
         List<Order> orders = orderService.getOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);
+    }
+
+    /**
+     * Retrieves a paginated list of orders in the system.
+     *
+     * @param pageable the pagination information (page, size, sort)
+     * @return page of {@link Order} entities and HTTP 200 (OK)
+     */
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Order>> getAllOrdersPaged(Pageable pageable) {
+        Page<Order> orders = orderService.getAllOrders(pageable);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

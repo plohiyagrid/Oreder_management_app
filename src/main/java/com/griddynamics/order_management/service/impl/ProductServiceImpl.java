@@ -8,6 +8,8 @@ import com.griddynamics.order_management.repository.ProductRepository;
 import com.griddynamics.order_management.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +73,18 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    /**
+     * Retrieves all products available in the system with pagination.
+     *
+     * @param pageable the pagination information
+     * @return a page of {@link Product} entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     /**

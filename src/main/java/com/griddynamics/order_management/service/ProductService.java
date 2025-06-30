@@ -4,6 +4,8 @@ import com.griddynamics.order_management.dto.ProductDTO;
 import com.griddynamics.order_management.dto.StockUpdateDTO;
 import com.griddynamics.order_management.exception.ProductNotFoundException;
 import com.griddynamics.order_management.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -38,6 +40,14 @@ public interface ProductService {
      * @return list of all {@link Product} entities
      */
     List<Product> getAllProducts();
+
+    /**
+     * Retrieves a paginated list of products.
+     *
+     * @param pageable the pagination information
+     * @return a page of {@link Product} entities
+     */
+    Page<Product> getAllProducts(Pageable pageable);
 
     /**
      * Updates the stock quantity of a product.

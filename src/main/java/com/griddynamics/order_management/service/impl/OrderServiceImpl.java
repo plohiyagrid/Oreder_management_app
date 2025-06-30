@@ -15,6 +15,8 @@ import com.griddynamics.order_management.service.OrderService;
 import com.griddynamics.order_management.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,5 +156,11 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByCustomerId(Long customerId) throws CustomerNotFoundException {
         Customer customer = customerService.getCustomerById(customerId);
         return orderRepository.findByCustomer(customer);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 }
