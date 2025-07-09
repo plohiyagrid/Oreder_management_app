@@ -3,6 +3,9 @@ package com.griddynamics.order_management.service;
 import com.griddynamics.order_management.dto.CustomerDTO;
 import com.griddynamics.order_management.exception.CustomerNotFoundException;
 import com.griddynamics.order_management.model.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -38,4 +41,9 @@ public interface CustomerService {
      * @return list of all {@link Customer} entities
      */
     List<Customer> getAllCustomers();
+
+    /**
+     * Paginated, filtered, and sorted search for customers.
+     */
+    Page<Customer> searchCustomers(String name, String email, LocalDate createdAfter, Pageable pageable);
 }

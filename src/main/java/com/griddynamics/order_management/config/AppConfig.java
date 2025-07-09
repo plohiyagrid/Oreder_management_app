@@ -13,11 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-    /**
-     * Defines a {@link ModelMapper} bean for object mapping between DTOs and entities.
-     *
-     * @return a new instance of {@link ModelMapper}
-     */
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

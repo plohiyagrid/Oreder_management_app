@@ -11,6 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+import com.griddynamics.order_management.dto.PaginatedResponse;
 
 /**
  * REST controller for managing customer-related operations.
@@ -60,8 +67,24 @@ public class CustomerController {
      * @return list of {@link Customer} entities along with HTTP 200 (OK) status
      */
     @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers() {
-        List<Customer> customers = customerService.getAllCustomers();
-        return new ResponseEntity<>(customers, HttpStatus.OK);
+    public ResponseEntity<PaginatedResponse<Customer>> getCustomers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort
+    ) {
+        Sort sortObj = Sort.by(
+            java.util.Arrays.stream(sort)
+                .map(s -> {
+                    String[] parts = s.split(",");
+                    return parts.length == 2 ? new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]) : new Sort.Order(Sort.Direction.ASC, s);
+                })
+                .toList()
+        );
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+        Page<Customer> customerPage = customerService.searchCustomers(name, email, createdAfter, pageable);
+        return ResponseEntity.ok(new PaginatedResponse<>(customerPage));
     }
 }

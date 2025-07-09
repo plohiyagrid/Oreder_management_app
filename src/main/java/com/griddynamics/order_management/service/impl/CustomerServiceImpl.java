@@ -7,9 +7,13 @@ import com.griddynamics.order_management.repository.CustomerRepository;
 import com.griddynamics.order_management.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -70,5 +74,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    @Override
+    public Page<Customer> searchCustomers(String name, String email, LocalDate createdAfter, Pageable pageable) {
+        Specification<Customer> spec = (root, query, cb) -> {
+            List<javax.persistence.criteria.Predicate> predicates = new java.util.ArrayList<>();
+            if (name != null) {
+                predicates.add(cb.like(cb.lower(root.get("name")), name.toLowerCase() + "%"));
+            }
+            if (email != null) {
+                predicates.add(cb.equal(root.get("email"), email));
+            }
+            if (createdAfter != null) {
+                predicates.add(cb.greaterThan(root.get("createdAt"), createdAfter));
+            }
+            return cb.and(predicates.toArray(new javax.persistence.criteria.Predicate[0]));
+        };
+        return customerRepository.findAll(spec, pageable);
     }
 }

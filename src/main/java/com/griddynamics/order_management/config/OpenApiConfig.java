@@ -15,11 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-    /**
-     * Defines the {@link OpenAPI} bean with custom API information.
-     *
-     * @return configured {@link OpenAPI} instance for Swagger documentation
-     */
     @Bean
     public OpenAPI orderManagementOpenAPI() {
         return new OpenAPI()
